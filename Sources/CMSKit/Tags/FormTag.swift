@@ -14,11 +14,11 @@ import Vapor
 ///     - objectId: Id of object being edited
 ///     - basePath: base path for cancelling or deleting object
 public final class FormTag: TagRenderer {
-    func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
+    public func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
         let body = try tag.requireBody()
 
         guard let request = tag.container as? Request
-            else { throw Abort(.internalServerError) }
+        else { throw Abort(.internalServerError) }
 
         // Get form action.
         let action: String

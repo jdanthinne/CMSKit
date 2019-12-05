@@ -21,8 +21,8 @@ public final class InputFieldTag: TagRenderer {
     enum InputType: String {
         case text, password, email
     }
-    
-    func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
+
+    public func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
         try tag.requireNoBody()
 
         // Get input type.
@@ -42,7 +42,7 @@ public final class InputFieldTag: TagRenderer {
                                                .formValues: 4,
                                                .errors: 5,
                                                .styling: 7]
-        
+
         let field = try CMSKit.fieldRow(tag: tag, indexes: indexes) { name, classes, value in
             #"<input type="\#(inputType)" name="\#(name)" id="\#(name)" class="form-control \#(classes)" value="\#(value)"/>"#
         }

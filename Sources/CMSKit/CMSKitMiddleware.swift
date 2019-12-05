@@ -13,7 +13,7 @@ public final class CMSKitMiddleware: Middleware, Service {
         let csrfToken: String
     }
 
-    func respond(to request: Request, chainingTo next: Responder) throws -> EventLoopFuture<Response> {
+    public func respond(to request: Request, chainingTo next: Responder) throws -> EventLoopFuture<Response> {
         let session = try request.session()
 
         // If no token, generate a new one.

@@ -18,34 +18,33 @@ import Vapor
 ///     - validationErrors: [String: String], array of form validation errors
 ///     - style: String, "vertical" or "horizontal" (default)
 public final class SelectFieldTag: TagRenderer {
-    
     struct Option: Encodable {
         let label: String
         let value: String
 
         init<T>(_ option: T) where T: RawRepresentable, T: CustomStringConvertible {
             label = option.description
-            value = String.init(describing: option.rawValue)
+            value = String(describing: option.rawValue)
         }
 
         init?(data: TemplateData) {
             guard let label = data.dictionary?["label"]?.string,
-            let value = data.dictionary?["value"]?.string
+                let value = data.dictionary?["value"]?.string
             else { return nil }
 
             self.label = label
             self.value = value
         }
     }
-    
-    func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
+
+    public func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
         try tag.requireNoBody()
 
         // Get required values
         guard let options = tag.parameters[3].array else {
             throw Abort(.internalServerError, reason: "Unable to get select tag options")
         }
-        
+
         // Build HTML
         let indexes: CMSKit.FieldRowIndexes = [.label: 0,
                                                .name: 1,
@@ -54,10 +53,10 @@ public final class SelectFieldTag: TagRenderer {
                                                .formValues: 5,
                                                .errors: 6,
                                                .styling: 7]
-        
+
         let field = try CMSKit.fieldRow(tag: tag, indexes: indexes) { name, classes, value in
             var html = #"<select name="\#(name)" id="\#(name)" class="form-control \#(classes)"/>"#
-            
+
             for option in options.compactMap(Option.init) {
                 html += #"<option value="\#(option.value)""#
                 if option.value == value {
@@ -65,9 +64,9 @@ public final class SelectFieldTag: TagRenderer {
                 }
                 html += #">\#(option.label)</option>"#
             }
-            
+
             html += #"</select>"#
-            
+
             return html
         }
 
