@@ -12,23 +12,26 @@ public struct CMSKit {
     enum FieldRowIndex {
         case label, name, isRequired, value, formValues, errors, styling
     }
+
     typealias FieldRowIndexes = [FieldRowIndex: Int]
 
     enum Styling: String {
         case vertical, horizontal
     }
-    
+
     enum LabelPosition {
         case before, after
     }
-    
+
     typealias RowBuilder = (_ name: String, _ classes: String, _ value: String) -> String
 
     static func fieldRow(tag: TagContext,
                          indexes: FieldRowIndexes,
                          labelPosition: LabelPosition = .before,
+                         labelClasses: String = "col-form-label form-control-label",
+                         value: String? = nil,
+                         fieldWrapper: (() -> (before: String, after: String))? = nil,
                          builder: RowBuilder) throws -> String {
-
         // Get required values
         guard let labelIndex = indexes[.label],
             let nameIndex = indexes[.name],
@@ -48,18 +51,20 @@ public struct CMSKit {
 
         // Get style.
         let style = styling(tag: tag, styleIndex: indexes[.styling])
-        
+
+        // Get field wrapper.
+        let fieldWrapper = fieldWrapper?()
+
         // Generate label.
-        var labelHTML = #"<label for="\#(name)" class="col-form-label \#(style == .horizontal && labelPosition == .before ? "col-sm-2" : "") form-control-label">\#(label)"#
+        var labelHTML = #"<label for="\#(name)" class="\#(labelClasses) \#(style == .horizontal && labelPosition == .before ? "col-sm-2" : "")">\#(label)"#
         if isRequired {
             labelHTML += #"<span class="text-danger">*</span>"#
         }
         labelHTML += #"</label>"#
-        
 
         // Generate HTML.
         var html = #"<div class="form-group \#(style == .horizontal ? "row" : "")">"#
-        
+
         if labelPosition == .before {
             html += labelHTML
         } else if style == .horizontal {
@@ -70,10 +75,18 @@ public struct CMSKit {
             html += #"<div class="col-sm-10">"#
         }
 
+        if let beforeField = fieldWrapper?.before {
+            html += beforeField
+        }
+
         html += builder(name, classes, value)
-        
+
         if labelPosition == .after {
             html += labelHTML
+        }
+
+        if let afterField = fieldWrapper?.after {
+            html += afterField
         }
 
         if let error = error {

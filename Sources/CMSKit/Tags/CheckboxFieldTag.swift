@@ -29,9 +29,17 @@ public final class CheckboxFieldTag: TagRenderer {
                                                .errors: 5,
                                                .styling: 6]
 
-        let field = try CMSKit.fieldRow(tag: tag, indexes: indexes, labelPosition: .after) { name, classes, value in
-            #"<input type="checkbox" name="\#(name)" id="\#(name)" class="form-check-input \#(classes)" value="\#(value)"/>"#
-        }
+        let field = try CMSKit.fieldRow(tag: tag,
+                                        indexes: indexes,
+                                        labelPosition: .after,
+                                        labelClasses: "form-check-label",
+                                        fieldWrapper: {
+                                            (before: #"<div class="form-check">"#,
+                                             after: "</div>")
+                                        },
+                                        builder: { name, classes, value in
+                                            #"<input type="checkbox" name="\#(name)" id="\#(name)" class="form-check-input \#(classes)" value="1" \#(value == "1" ? #"checked="checked"# : "")/>"#
+        })
 
         return Future.map(on: tag) {
             .string(field)
