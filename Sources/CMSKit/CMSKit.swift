@@ -12,14 +12,23 @@ public struct CMSKit {
     enum FieldRowIndex {
         case label, name, isRequired, value, formValues, errors, styling
     }
-
     typealias FieldRowIndexes = [FieldRowIndex: Int]
 
     enum Styling: String {
         case vertical, horizontal
     }
+    
+    enum LabelPosition {
+        case before, after
+    }
+    
+    typealias RowBuilder = (_ name: String, _ classes: String, _ value: String) -> String
 
-    static func fieldRow(tag: TagContext, indexes: FieldRowIndexes, builder: (_ name: String, _ classes: String, _ value: String) -> String) throws -> String {
+    static func fieldRow(tag: TagContext,
+                         indexes: FieldRowIndexes,
+                         labelPosition: LabelPosition = .before,
+                         builder: RowBuilder) throws -> String {
+
         // Get required values
         guard let labelIndex = indexes[.label],
             let nameIndex = indexes[.name],
@@ -39,21 +48,33 @@ public struct CMSKit {
 
         // Get style.
         let style = styling(tag: tag, styleIndex: indexes[.styling])
+        
+        // Generate label.
+        var labelHTML = #"<label for="\#(name)" class="col-form-label \#(style == .horizontal && labelPosition == .before ? "col-sm-2" : "") form-control-label">\#(label)"#
+        if isRequired {
+            labelHTML += #"<span class="text-danger">*</span>"#
+        }
+        labelHTML += #"</label>"#
+        
 
         // Generate HTML.
         var html = #"<div class="form-group \#(style == .horizontal ? "row" : "")">"#
-        html += #"<label for="\#(name)" class="col-form-label \#(style == .horizontal ? "col-sm-2" : "") form-control-label">\#(label)"#
-
-        if isRequired {
-            html += #"<span class="text-danger">*</span>"#
+        
+        if labelPosition == .before {
+            html += labelHTML
+        } else if style == .horizontal {
+            html += #"<div class="col-sm-2"></div>"#
         }
-        html += #"</label>"#
 
         if style == .horizontal {
             html += #"<div class="col-sm-10">"#
         }
 
         html += builder(name, classes, value)
+        
+        if labelPosition == .after {
+            html += labelHTML
+        }
 
         if let error = error {
             html += #"<small class="form-text text-danger">\#(error)</small>"#

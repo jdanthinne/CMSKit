@@ -11,6 +11,7 @@ extension LeafTagConfig {
     public mutating func useCMSKitTags() {
         use(InputFieldTag(), as: "inputField")
         use(SelectFieldTag(), as: "selectField")
+        use(CheckboxFieldTag(), as: "checkboxField")
         use(FormTag(), as: "form")
     }
 }
