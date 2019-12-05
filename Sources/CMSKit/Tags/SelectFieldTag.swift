@@ -18,11 +18,11 @@ import Vapor
 ///     - validationErrors: [String: String], array of form validation errors
 ///     - style: String, "vertical" or "horizontal" (default)
 public final class SelectFieldTag: TagRenderer {
-    struct Option: Encodable {
+    public struct Option: Encodable {
         let label: String
         let value: String
 
-        init<T>(_ option: T) where T: RawRepresentable, T: CustomStringConvertible {
+        public init<T>(_ option: T) where T: RawRepresentable, T: CustomStringConvertible {
             label = option.description
             value = String(describing: option.rawValue)
         }

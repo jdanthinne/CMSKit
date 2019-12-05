@@ -9,10 +9,14 @@ import Crypto
 import Vapor
 
 public final class CMSKitMiddleware: Middleware, Service {
+    /// Create a new `CMSKitMiddleware`.
+    public init() {}
+
     struct TokenContext: Decodable {
         let csrfToken: String
     }
 
+    /// See `Middleware`.
     public func respond(to request: Request, chainingTo next: Responder) throws -> EventLoopFuture<Response> {
         let session = try request.session()
 
