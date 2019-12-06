@@ -41,7 +41,13 @@ public final class FieldsetTag: TagRenderer {
             html += #"<h3>\#(legend)</h3>"#
 
             if styling == .horizontal {
-                html += "</div></div>"
+                html += """
+                    </div>
+                    <div class="col-sm-12"><hr></div>
+                </div>
+                """
+            } else {
+                html += "<hr>"
             }
 
             html += """
