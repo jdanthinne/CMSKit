@@ -24,22 +24,30 @@ public final class FieldsetTag: TagRenderer {
         // Build HTML
         return tag.serializer.serialize(ast: body).map(to: TemplateData.self) { body in
             let body = String(data: body.data, encoding: .utf8) ?? ""
-            var html = ""
 
-            if styling == .horizontal {
-                html += #"<div class="col-sm-2"></div><div class="col-sm-10">"#
-            }
-
-            html += """
-                <fieldset class="form-group">
-                    <legend>\(legend)</legend>
-                    \(body)
-                </fieldset>
+            var html = """
+            <fieldset class="form-group">
+                <legend class="d-none">\(legend)</legend>
             """
 
             if styling == .horizontal {
-                html += "</div>"
+                html += """
+                <div class="form-group row">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                """
             }
+
+            html += #"<h3>\#(legend)</h3>"#
+
+            if styling == .horizontal {
+                html += "</div></div>"
+            }
+
+            html += """
+                \(body)
+            </fieldset>
+            """
 
             return .string(html)
         }
