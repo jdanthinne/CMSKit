@@ -64,7 +64,7 @@ public final class SelectFieldTag: TagRenderer {
                 html += #"<div class="col-sm-10">"#
             }
 
-            html += #"<select name="\#(name)" id="\#(name)" class="form-control \#(options.classes)"/>"#
+            html += #"<select name="\#(name)" id="\#(name)" class="form-control \#(options.classes)"/>"#
 
             for selectOption in selectOptions.compactMap(Option.init) {
                 html += #"<option value="\#(selectOption.value)""#

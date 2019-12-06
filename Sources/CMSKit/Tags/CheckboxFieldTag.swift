@@ -44,7 +44,7 @@ public final class CheckboxFieldTag: TagRenderer {
 
             html += """
                 <div class="form-check">
-                    <input type="checkbox" name="\(name)" id="\(name)" class="form-check-input \(options.classes)" value="1" \(options.value == "1" ? #"checked="checked"# : "")/>
+                    <input type="checkbox" name="\(name)" id="\(name)" class="form-check-input \(options.classes)" value="1" \(options.value == "1" ? #"checked="checked"# : "")/>
                     <label for="\(name)" class="form-check-label">\(label)\(isRequired ? #"<span class="text-danger">*</span>"# : "")</label>
                 </div>
             """
