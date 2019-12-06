@@ -21,12 +21,20 @@ extension TagContext {
         // Get the classes.
         let classes = error != nil ? "is-invalid" : ""
 
+        // Get help.
+        var help: String?
+        if let helpText = parameter(at: indexes[.help])?.string,
+            !helpText.isEmpty {
+            help = helpText
+        }
+
         // Get style.
         let styling = fieldStyling(parameterIndex: indexes[.styling])
 
         // Generate HTML.
         let options = CMSKit.FieldRowBuilderOptions(classes: classes,
                                                     value: value,
+                                                    help: help,
                                                     error: error,
                                                     styling: styling)
 
@@ -71,7 +79,7 @@ extension TagContext {
 
 public struct CMSKit {
     public enum FieldRowIndex {
-        case value, formValues, errors, styling
+        case value, help, formValues, errors, styling
     }
 
     public typealias FieldRowIndexes = [FieldRowIndex: Int]
@@ -83,6 +91,7 @@ public struct CMSKit {
     public struct FieldRowBuilderOptions {
         let classes: String
         let value: TemplateData?
+        let help: String?
         let error: String?
         let styling: FieldRowStyling
     }

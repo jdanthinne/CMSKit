@@ -14,6 +14,7 @@ import Vapor
 ///     - isRequired: Bool (default to false)
 ///     - value: Bool, initial field value
 ///     - defaultValue: Bool, if no value, the initial state
+///     - help: String
 ///     - formValues: [String: String], array of submitted form values
 ///     - validationErrors: [String: String], array of form validation errors
 ///     - style: String, "vertical" or "horizontal" (default)
@@ -32,9 +33,10 @@ public final class CheckboxFieldTag: TagRenderer {
 
         // Build HTML
         let indexes: CMSKit.FieldRowIndexes = [.value: 3,
-                                               .formValues: 5,
-                                               .errors: 6,
-                                               .styling: 7]
+                                               .help: 5,
+                                               .formValues: 6,
+                                               .errors: 7,
+                                               .styling: 8]
 
         let field = tag.fieldRow(indexes: indexes) { options in
             var html = ""
@@ -50,6 +52,11 @@ public final class CheckboxFieldTag: TagRenderer {
                     <label for="\(name)" class="form-check-label">\(label)\(isRequired ? #"<span class="text-danger">*</span>"# : "")</label>
                 </div>
             """
+
+            // Help
+            if let help = options.help {
+                html += #"<small class="form-text text-muted">\#(help)</small>"#
+            }
 
             // Error
             if let error = options.error {

@@ -14,6 +14,7 @@ import Vapor
 ///     - isRequired: Bool (default to false)
 ///     - value: String, initial field value
 ///     - placeholder: String
+///     - help: String
 ///     - formValues: [String: String], array of submitted form values
 ///     - validationErrors: [String: String], array of form validation errors
 ///     - type: String, field type (default to "text")
@@ -36,8 +37,8 @@ public final class InputFieldTag: TagRenderer {
 
         // Get input type.
         let inputType: InputType
-        if tag.parameters.count >= 8,
-            let type = InputType(rawValue: tag.parameters[7].string ?? "") {
+        if tag.parameters.count >= 9,
+            let type = InputType(rawValue: tag.parameters[8].string ?? "") {
             inputType = type
         } else {
             inputType = .text
@@ -48,9 +49,10 @@ public final class InputFieldTag: TagRenderer {
 
         // Build HTML.
         let indexes: CMSKit.FieldRowIndexes = [.value: 3,
-                                               .formValues: 5,
-                                               .errors: 6,
-                                               .styling: 8]
+                                               .help: 5,
+                                               .formValues: 6,
+                                               .errors: 7,
+                                               .styling: 9]
 
         let field = tag.fieldRow(indexes: indexes) { options in
             // Label
@@ -62,6 +64,11 @@ public final class InputFieldTag: TagRenderer {
             }
 
             html += #"<input type="\#(inputType)" name="\#(name)" id="\#(name)" class="form-control \#(options.classes)" value="\#(options.value?.string ?? "")" placeholder="\#(placeholder)"/>"#
+
+            // Help
+            if let help = options.help {
+                html += #"<small class="form-text text-muted">\#(help)</small>"#
+            }
 
             // Error
             if let error = options.error {

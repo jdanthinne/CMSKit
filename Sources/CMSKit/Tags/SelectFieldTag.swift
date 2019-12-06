@@ -14,6 +14,7 @@ import Vapor
 ///     - isRequired: Bool (default to false)
 ///     - options: [Option]
 ///     - value: String, initial field value
+///     - help: String
 ///     - formValues: [String: String], array of submitted form values
 ///     - validationErrors: [String: String], array of form validation errors
 ///     - style: String, "vertical" or "horizontal" (default)
@@ -51,9 +52,10 @@ public final class SelectFieldTag: TagRenderer {
 
         // Build HTML
         let indexes: CMSKit.FieldRowIndexes = [.value: 4,
-                                               .formValues: 5,
-                                               .errors: 6,
-                                               .styling: 7]
+                                               .help: 5,
+                                               .formValues: 6,
+                                               .errors: 7,
+                                               .styling: 8]
 
         let field = tag.fieldRow(indexes: indexes) { options in
             // Label
@@ -75,6 +77,11 @@ public final class SelectFieldTag: TagRenderer {
             }
 
             html += "</select>"
+
+            // Help
+            if let help = options.help {
+                html += #"<small class="form-text text-muted">\#(help)</small>"#
+            }
 
             // Error
             if let error = options.error {
