@@ -13,6 +13,7 @@ import Vapor
 ///     - name: String
 ///     - isRequired: Bool (default to false)
 ///     - value: String, initial field value
+///     - placeholder: String
 ///     - formValues: [String: String], array of submitted form values
 ///     - validationErrors: [String: String], array of form validation errors
 ///     - type: String, field type (default to "text")
@@ -42,11 +43,14 @@ public final class InputFieldTag: TagRenderer {
             inputType = .text
         }
 
+        // Get placeholder.
+        let placeholder = tag.parameter(at: 4)?.string ?? ""
+
         // Build HTML.
         let indexes: CMSKit.FieldRowIndexes = [.value: 3,
-                                               .formValues: 4,
-                                               .errors: 5,
-                                               .styling: 7]
+                                               .formValues: 5,
+                                               .errors: 6,
+                                               .styling: 8]
 
         let field = tag.fieldRow(indexes: indexes) { options in
             // Label
@@ -57,7 +61,7 @@ public final class InputFieldTag: TagRenderer {
                 html += #"<div class="col-sm-10">"#
             }
 
-            html += #"<input type="\#(inputType)" name="\#(name)" id="\#(name)" class="form-control \#(options.classes)" value="\#(options.value?.string ?? "")"/>"#
+            html += #"<input type="\#(inputType)" name="\#(name)" id="\#(name)" class="form-control \#(options.classes)" value="\#(options.value?.string ?? "")" placeholder="\#(placeholder)"/>"#
 
             // Error
             if let error = options.error {
