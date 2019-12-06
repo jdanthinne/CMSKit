@@ -10,6 +10,7 @@ import Vapor
 /// Renders a fieldset
 /// - Parameters:
 ///     - legend: String
+///     - style: String, "vertical" or "horizontal" (default)
 public final class FieldsetTag: TagRenderer {
     public func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
         let body = try tag.requireBody()
@@ -17,14 +18,30 @@ public final class FieldsetTag: TagRenderer {
         guard let legend = tag.parameter(at: 0)?.string
         else { throw Abort(.internalServerError, reason: "Unable to get Tag required parameters") }
 
+        // Get style.
+        let styling = tag.fieldStyling(parameterIndex: 1)
+
         // Build HTML
         return tag.serializer.serialize(ast: body).map(to: TemplateData.self) { body in
-            .string("""
+            let body = String(data: body.data, encoding: .utf8) ?? ""
+            var html = ""
+
+            if styling == .horizontal {
+                html += #"<div class="col-sm-2"></div><div class="col-sm-10">"#
+            }
+
+            html += """
                 <fieldset class="form-group">
                     <legend>\(legend)</legend>
                     \(body)
                 </fieldset>
-            """)
+            """
+
+            if styling == .horizontal {
+                html += "</div>"
+            }
+
+            return .string(html)
         }
     }
 }
