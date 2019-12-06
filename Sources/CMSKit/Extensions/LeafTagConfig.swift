@@ -13,5 +13,6 @@ extension LeafTagConfig {
         use(SelectFieldTag(), as: "selectField")
         use(CheckboxFieldTag(), as: "checkboxField")
         use(FormTag(), as: "form")
+        use(FieldsetTag(), as: "fieldset")
     }
 }
