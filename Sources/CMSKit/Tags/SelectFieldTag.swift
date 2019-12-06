@@ -68,7 +68,7 @@ public final class SelectFieldTag: TagRenderer {
 
             for selectOption in selectOptions.compactMap(Option.init) {
                 html += #"<option value="\#(selectOption.value)""#
-                if selectOption.value == options.value {
+                if selectOption.value == options.value?.string {
                     html += #" selected="selected""#
                 }
                 html += ">\(selectOption.label)</option>"

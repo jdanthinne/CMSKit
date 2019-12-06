@@ -45,9 +45,9 @@ extension TagContext {
         return styling
     }
 
-    func fieldValue(fieldName: String, valueParameterIndex: Int?, formValuesParameterIndex: Int?) -> String {
-        guard let formValue = parameter(at: formValuesParameterIndex)?.dictionary?[fieldName]?.string else {
-            return parameter(at: valueParameterIndex)?.string ?? ""
+    func fieldValue(fieldName: String, valueParameterIndex: Int?, formValuesParameterIndex: Int?) -> TemplateData? {
+        guard let formValue = parameter(at: formValuesParameterIndex)?.dictionary?[fieldName] else {
+            return parameter(at: valueParameterIndex)
         }
 
         return formValue
@@ -82,7 +82,7 @@ public struct CMSKit {
 
     public struct FieldRowBuilderOptions {
         let classes: String
-        let value: String
+        let value: TemplateData?
         let error: String?
         let styling: FieldRowStyling
     }

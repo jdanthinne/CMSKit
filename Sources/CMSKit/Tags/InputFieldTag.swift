@@ -57,7 +57,7 @@ public final class InputFieldTag: TagRenderer {
                 html += #"<div class="col-sm-10">"#
             }
 
-            html += #"<input type="\#(inputType)" name="\#(name)" id="\#(name)" class="form-control \#(options.classes)" value="\#(options.value)"/>"#
+            html += #"<input type="\#(inputType)" name="\#(name)" id="\#(name)" class="form-control \#(options.classes)" value="\#(options.value?.string ?? "")"/>"#
 
             // Error
             if let error = options.error {
