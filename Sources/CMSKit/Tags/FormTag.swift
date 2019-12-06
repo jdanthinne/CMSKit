@@ -29,6 +29,9 @@ public final class FormTag: TagRenderer {
         } else {
             action = request.http.urlString
         }
+        
+        print(request.http)
+        dump(request)
 
         // Get form classes.
         let classes: String
@@ -46,6 +49,7 @@ public final class FormTag: TagRenderer {
             // If an object is provided, include footer buttons.
             if tag.parameters.count >= 3 {
                 html += """
+                    <hr>
                     <div class="form-group row">
                     <div class="col-sm-2"></div>
                     <div class="col-sm-10 d-flex justify-content-between">
