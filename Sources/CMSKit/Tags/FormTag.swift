@@ -29,9 +29,8 @@ public final class FormTag: TagRenderer {
         } else {
             action = request.http.urlString
         }
-        
+
         print(request.http)
-        dump(request)
 
         // Get form classes.
         let classes: String

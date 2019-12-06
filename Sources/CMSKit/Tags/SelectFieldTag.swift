@@ -40,32 +40,54 @@ public final class SelectFieldTag: TagRenderer {
     public func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
         try tag.requireNoBody()
 
-        // Get required values
-        guard let options = tag.parameters[3].array else {
-            throw Abort(.internalServerError, reason: "Unable to get select tag options")
+        // Get required values.
+        guard let label = tag.parameter(at: 0)?.string,
+            let name = tag.parameter(at: 1)?.string,
+            let isRequired = tag.parameter(at: 2)?.bool,
+            let selectOptions = tag.parameter(at: 3)?.array
+        else {
+            throw Abort(.internalServerError, reason: "Unable to get Tag required parameters")
         }
 
         // Build HTML
-        let indexes: CMSKit.FieldRowIndexes = [.label: 0,
-                                               .name: 1,
-                                               .isRequired: 2,
-                                               .value: 4,
+        let indexes: CMSKit.FieldRowIndexes = [.value: 4,
                                                .formValues: 5,
                                                .errors: 6,
                                                .styling: 7]
 
-        let field = try CMSKit.fieldRow(tag: tag, indexes: indexes) { name, classes, value in
-            var html = #"<select name="\#(name)" id="\#(name)" class="form-control \#(classes)"/>"#
+        let field = tag.fieldRow(indexes: indexes) { options in
+            // Label
+            var html = """
+            <label for="\(name)" 
+                class="col-form-label form-control-label \(options.styling == .horizontal ? "col-sm-2" : "")
+            ">\(label)\(isRequired ? #"<span class="text-danger">*</span>"# : "")</label>
+            """
 
-            for option in options.compactMap(Option.init) {
-                html += #"<option value="\#(option.value)""#
-                if option.value == value {
-                    html += #" selected="selected""#
-                }
-                html += #">\#(option.label)</option>"#
+            // Select
+            if options.styling == .horizontal {
+                html += #"<div class="col-sm-10">"#
             }
 
-            html += #"</select>"#
+            html += #"<select name="\#(name)" id="\#(name)" class="form-control \#(options.classes)"/>"#
+
+            for selectOption in selectOptions.compactMap(Option.init) {
+                html += #"<option value="\#(selectOption.value)""#
+                if selectOption.value == options.value {
+                    html += #" selected="selected""#
+                }
+                html += ">\(selectOption.label)</option>"
+            }
+
+            html += "</select>"
+
+            // Error
+            if let error = options.error {
+                html += #"<small class="form-text text-danger">\#(error)</small>"#
+            }
+
+            if options.styling == .horizontal {
+                html += "</div>"
+            }
 
             return html
         }
