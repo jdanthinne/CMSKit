@@ -12,7 +12,8 @@ import Vapor
 ///     - label: String
 ///     - name: String
 ///     - isRequired: Bool (default to false)
-///     - value: String, initial field value
+///     - value: Bool, initial field value
+///     - defaultValue: Bool, if no value, the initial state
 ///     - formValues: [String: String], array of submitted form values
 ///     - validationErrors: [String: String], array of form validation errors
 ///     - style: String, "vertical" or "horizontal" (default)
@@ -23,16 +24,17 @@ public final class CheckboxFieldTag: TagRenderer {
         // Get required values.
         guard let label = tag.parameter(at: 0)?.string,
             let name = tag.parameter(at: 1)?.string,
-            let isRequired = tag.parameter(at: 2)?.bool
+            let isRequired = tag.parameter(at: 2)?.bool,
+            let defaultValue = tag.parameter(at: 4)?.bool
         else {
             throw Abort(.internalServerError, reason: "Unable to get Tag required parameters")
         }
 
         // Build HTML
         let indexes: CMSKit.FieldRowIndexes = [.value: 3,
-                                               .formValues: 4,
-                                               .errors: 5,
-                                               .styling: 6]
+                                               .formValues: 5,
+                                               .errors: 6,
+                                               .styling: 7]
 
         let field = tag.fieldRow(indexes: indexes) { options in
             var html = ""
@@ -44,7 +46,7 @@ public final class CheckboxFieldTag: TagRenderer {
 
             html += """
                 <div class="form-check">
-            <input type="checkbox" name="\(name)" id="\(name)" class="form-check-input \(options.classes)" value="1" \((options.value?.bool ?? false) ? #"checked="checked"# : "")/>
+            <input type="checkbox" name="\(name)" id="\(name)" class="form-check-input \(options.classes)" value="1" \((options.value?.bool ?? defaultValue) ? #"checked="checked"# : "")/>
                     <label for="\(name)" class="form-check-label">\(label)\(isRequired ? #"<span class="text-danger">*</span>"# : "")</label>
                 </div>
             """
