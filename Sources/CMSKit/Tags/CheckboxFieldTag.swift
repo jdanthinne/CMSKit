@@ -7,7 +7,7 @@
 
 import Vapor
 
-/// Renders a form tag, including a CSRF Token
+/// Renders a checkbox field
 /// - Parameters:
 ///     - label: String
 ///     - name: String
@@ -45,10 +45,10 @@ public final class CheckboxFieldTag: TagRenderer {
             html += """
                 <div class="form-check">
                     <input type="checkbox" 
-                        name="\(name)" id="\(name)" 
+                        name="\(name)" id="edit-\(name)" 
                         class="form-check-input \(options.classes)" 
                         value="1" \(options.value == "1" ? #"checked="checked"# : "")/>
-                    <label for="\(name)" 
+                    <label for="edit-\(name)" 
                         class="form-check-label">\(label)\(isRequired ? #"<span class="text-danger">*</span>"# : "")</label>
                 </div>
             """

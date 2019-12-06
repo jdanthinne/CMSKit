@@ -7,7 +7,7 @@
 
 import Vapor
 
-/// Renders a form tag, including a CSRF Token
+/// Renders an input field
 /// - Parameters:
 ///     - label: String
 ///     - name: String
@@ -51,7 +51,7 @@ public final class InputFieldTag: TagRenderer {
         let field = tag.fieldRow(indexes: indexes) { options in
             // Label
             var html = """
-            <label for="\(name)" 
+            <label for="edit-\(name)" 
                 class="col-form-label form-control-label \(options.styling == .horizontal ? "col-sm-2" : "")
             ">\(label)\(isRequired ? #"<span class="text-danger">*</span>"# : "")</label>
             """
@@ -62,7 +62,7 @@ public final class InputFieldTag: TagRenderer {
             }
 
             html += """
-            <input type="\(inputType)" name="\(name)" id="\(name)" 
+            <input type="\(inputType)" name="\(name)" id="edit-\(name)" 
                 class="form-control \(options.classes)" value="\(options.value)"/>
             """
 
