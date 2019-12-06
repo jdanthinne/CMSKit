@@ -57,18 +57,14 @@ public final class SelectFieldTag: TagRenderer {
 
         let field = tag.fieldRow(indexes: indexes) { options in
             // Label
-            var html = """
-            <label for="edit-\(name)" 
-                class="col-form-label form-control-label \(options.styling == .horizontal ? "col-sm-2" : "")
-            ">\(label)\(isRequired ? #"<span class="text-danger">*</span>"# : "")</label>
-            """
+            var html = #"<label for="\#(name)" class="col-form-label form-control-label \#(options.styling == .horizontal ? "col-sm-2" : "")">\#(label)\#(isRequired ? #"<span class="text-danger">*</span>"# : "")</label>"#
 
             // Select
             if options.styling == .horizontal {
                 html += #"<div class="col-sm-10">"#
             }
 
-            html += #"<select name="\#(name)" id="edit-\#(name)" class="form-control \#(options.classes)"/>"#
+            html += #"<select name="\#(name)" id="\#(name)" class="form-control \#(options.classes)"/>"#
 
             for selectOption in selectOptions.compactMap(Option.init) {
                 html += #"<option value="\#(selectOption.value)""#
