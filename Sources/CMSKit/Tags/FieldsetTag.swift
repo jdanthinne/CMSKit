@@ -14,7 +14,7 @@ public final class FieldsetTag: TagRenderer {
     public func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
         let body = try tag.requireBody()
 
-        guard let legend = tag.parameter(at: 1)?.string
+        guard let legend = tag.parameter(at: 0)?.string
         else { throw Abort(.internalServerError, reason: "Unable to get Tag required parameters") }
 
         // Build HTML

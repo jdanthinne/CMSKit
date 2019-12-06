@@ -36,8 +36,8 @@ public final class InputFieldTag: TagRenderer {
 
         // Get input type.
         let inputType: InputType
-        if tag.parameters.count >= 7,
-            let type = InputType(rawValue: tag.parameters[6].string ?? "") {
+        if tag.parameters.count >= 8,
+            let type = InputType(rawValue: tag.parameters[7].string ?? "") {
             inputType = type
         } else {
             inputType = .text
