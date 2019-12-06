@@ -48,15 +48,10 @@ public final class CheckboxFieldTag: TagRenderer {
                         name="\(name)" id="\(name)" 
                         class="form-check-input \(options.classes)" 
                         value="1" \(options.value == "1" ? #"checked="checked"# : "")/>
+                    <label for="\(name)" 
+                        class="form-check-label">\(label)\(isRequired ? #"<span class="text-danger">*</span>"# : "")</label>
                 </div>
             """
-
-            // Label
-            html += #"<label for="\#(name)" class="form-check-label">\#(label)"#
-            if isRequired {
-                html += #"<span class="text-danger">*</span>"#
-            }
-            html += "</label>"
 
             // Error
             if let error = options.error {
