@@ -39,11 +39,11 @@ public final class CheckboxFieldTag: TagRenderer {
 
             // Input
             if options.styling == .horizontal {
-                html += #"<div class="col-sm-10">"#
+                html += #"<div class="col-sm-2"></div><div class="col-sm-10">"#
             }
 
             html += """
-                <div>
+                <div class="form-check">
                     <input type="checkbox" 
                         name="\(name)" id="\(name)" 
                         class="form-check-input \(options.classes)" 
