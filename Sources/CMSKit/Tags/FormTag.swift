@@ -16,9 +16,8 @@ import Vapor
 public final class FormTag: TagRenderer {
     public func render(tag: TagContext) throws -> EventLoopFuture<TemplateData> {
         let body = try tag.requireBody()
-
-        guard let request = tag.container as? Request
-        else { throw Abort(.internalServerError) }
+        let request = try tag.requireRequest()
+        let cmskit = try tag.requireCMSKit()
 
         // Get form action.
         let action: String
@@ -77,7 +76,7 @@ public final class FormTag: TagRenderer {
             }
 
             // CSFR Token
-            guard let token = try request.session()["CSRF_TOKEN"] else {
+            guard let token = cmskit.csrfToken else {
                 throw Abort(.internalServerError, reason: "Unable to retrieve session token")
             }
             html += #"<input type="hidden" name="csrfToken" value="\#(token)">"#
